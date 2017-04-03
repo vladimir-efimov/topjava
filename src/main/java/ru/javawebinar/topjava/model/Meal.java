@@ -23,6 +23,10 @@ public class Meal extends BaseEntity {
         this(null, dateTime, description, calories, null);
     }
 
+    public Meal(LocalDateTime dateTime, String description, int calories, Integer userId) {
+        this(null, dateTime, description, calories, userId);
+    }
+
     public Meal(Integer id, LocalDateTime dateTime, String description, int calories, Integer userId) {
         this.id = id;
         this.dateTime = dateTime;

@@ -68,6 +68,13 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/meal.jsp").forward(request, response);
                 break;
+            case "mealsForUser":
+                LOG.info("mealsForUser");
+                Integer userId = Integer.parseInt(request.getParameter("userId"));
+                request.setAttribute("meals",
+                        MealsUtil.getWithExceeded(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY, userId));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                break;
             case "all":
             default:
                 LOG.info("getAll");
