@@ -72,7 +72,8 @@ public class MealServlet extends HttpServlet {
                 LOG.info("mealsForUser");
                 Integer userId = Integer.parseInt(request.getParameter("userId"));
                 request.setAttribute("meals",
-                        MealsUtil.getWithExceeded(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY, userId));
+                        MealsUtil.getWithExceeded(repository.getAll(),
+                                MealsUtil.DEFAULT_CALORIES_PER_DAY, userId, MealsUtil.SORT_DESCENDING));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
