@@ -27,14 +27,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository{
 
     @Override
     public boolean delete(int id) {
-        //todo: try use stream
-        if(repository.containsKey(id))
-        {
-            LOG.info("delete " + id);
-            repository.remove(id);
-            return true;
-        }
-        return false;
+        return repository.remove(id) != null;
     }
 
     @Override
@@ -62,6 +55,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository{
     @Override
     public User getByEmail(String email) {
         LOG.info("getByEmail " + email);
-        return repository.values().stream().findFirst().filter(user -> user.getEmail()==email).get();
+        return repository.values().stream().filter(user -> user.getEmail()==email).findFirst().get();
     }
 }
