@@ -16,7 +16,8 @@ public class MealServiceImpl implements MealService {
 
     private MealRepository repository = new InMemoryMealRepositoryImpl();
     private UserRepository userRepository = new InMemoryUserRepositoryImpl();
-    private Collection<MealWithExceed> meals;
+    private Collection<MealWithExceed> meals = null;
+    private boolean firstCall = true;
 
     public MealWithExceed save(MealWithExceed meal) {
         int mealId = meal.getId();
@@ -46,6 +47,10 @@ public class MealServiceImpl implements MealService {
     }
 
     public Collection<MealWithExceed> getAll() {
+        if(firstCall) {
+            meals = MealsUtil.getWithExceeded(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY, 0);
+            firstCall = false;
+        }
         return meals;
     }
 
