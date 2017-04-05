@@ -11,11 +11,16 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.Collection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class MealServiceImpl implements MealService {
 
-    private MealRepository repository = new InMemoryMealRepositoryImpl();
-    private UserRepository userRepository = new InMemoryUserRepositoryImpl();
+    @Autowired
+    private MealRepository repository;// = new InMemoryMealRepositoryImpl();
+    @Autowired
+    private UserRepository userRepository;// = new InMemoryUserRepositoryImpl();
     private Collection<MealWithExceed> meals = null;
     private boolean firstCall = true;
 

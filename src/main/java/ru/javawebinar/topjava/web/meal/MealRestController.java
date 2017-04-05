@@ -8,10 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.util.UserUtil;
 import java.util.Collection;
+import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 
+@Controller
 public class MealRestController {
 
-    private MealService service = new MealServiceImpl();
+    @Autowired
+    private MealService service;// = new MealServiceImpl();
     private User AuthorizedUser = UserUtil.USERS.get(0);
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
