@@ -29,7 +29,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     @Autowired
     public JdbcMealRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.mealUser = new SimpleJdbcInsert(dataSource)
-                .withTableName("users")
+                .withTableName("meals")
                 .usingGeneratedKeyColumns("id");
 
         this.jdbcTemplate = jdbcTemplate;
@@ -66,25 +66,25 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        List<Meal> meals = jdbcTemplate.query("SELECT * FROM meals WHERE id=? and user_id=?", ROW_MAPPER, id, userId);
+        List<Meal> meals = jdbcTemplate.query("SELECT id, datetime, description, calories FROM meals WHERE id=? and user_id=?", ROW_MAPPER, id, userId);
         return DataAccessUtils.singleResult(meals);
     }
 
     @Override
     public List<Meal> getAll(int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals ORDER BY datetime WHERE user_id=?",
+        return jdbcTemplate.query("SELECT id, datetime, description, calories FROM meals ORDER BY datetime WHERE user_id=?",
                 ROW_MAPPER, userId);
     }
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
-        return jdbcTemplate.query("SELECT * FROM meals ORDER BY datetime " +
+        return jdbcTemplate.query("SELECT id, datetime, description, calories FROM meals ORDER BY datetime " +
                                       "WHERE user_id=? AND datetime >= ? AND datetime <= ?",
                 ROW_MAPPER, userId, startDate, endDate);
     }
 
     private boolean mealIsNew(int id) {
-        List<Meal> meals = jdbcTemplate.query("SELECT * FROM meals WHERE id=?",
+        List<Meal> meals = jdbcTemplate.query("SELECT id, datetime, description, calories FROM meals WHERE id=?",
                 ROW_MAPPER, id);
         return DataAccessUtils.singleResult(meals) == null;
     }
