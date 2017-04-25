@@ -103,6 +103,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
@@ -192,6 +193,19 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+
+        <profile>
+             <id>jdbc</id>
+        </profile>
+
+        <profile>
+            <id>jpa</id>
+        </profile>
+
+        <profile>
+            <id>datajpa</id>
+        </profile>
+
     </profiles>
 
     <dependencyManagement>
