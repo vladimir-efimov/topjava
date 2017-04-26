@@ -194,18 +194,6 @@
             </activation>
         </profile>
 
-        <profile>
-             <id>jdbc</id>
-        </profile>
-
-        <profile>
-            <id>jpa</id>
-        </profile>
-
-        <profile>
-            <id>datajpa</id>
-        </profile>
-
     </profiles>
 
     <dependencyManagement>
