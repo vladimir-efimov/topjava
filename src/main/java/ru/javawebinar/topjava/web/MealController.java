@@ -2,6 +2,8 @@ package ru.javawebinar.topjava.web;
 
 import java.util.Objects;
 import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,10 +52,35 @@ public class MealController extends MealRestController{
     }
 
     @RequestMapping(value = "/meals", method = RequestMethod.POST)
-    public String updateMeals(HttpServletRequest request) {
-        //int userId = Integer.valueOf(request.getParameter("userId"));
-        //AuthorizedUser.setId(userId);
-        return "";
+    public String updateMeals(Model model, HttpServletRequest request) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+        }catch(Exception ex) {}
+
+        String action = request.getParameter("action");
+        if (action == null) {
+            final Meal meal = new Meal(
+                    LocalDateTime.parse(request.getParameter("dateTime")),
+                    request.getParameter("description"),
+                    Integer.valueOf(request.getParameter("calories")));
+            if (request.getParameter("id").isEmpty()) {
+                create(meal);
+            } else {
+                update(meal, getId(request));
+            }
+            //response.sendRedirect("meals");
+            model.addAttribute("meals", getAll());
+        } else if ("filter".equals(action)) {
+            LocalDate startDate = DateTimeUtil.parseLocalDate(request.getParameter("startDate"));
+            LocalDate endDate = DateTimeUtil.parseLocalDate(request.getParameter("endDate"));
+            LocalTime startTime = DateTimeUtil.parseLocalTime(request.getParameter("startTime"));
+            LocalTime endTime = DateTimeUtil.parseLocalTime(request.getParameter("endTime"));
+            model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
+            //request.setAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
+            //request.getRequestDispatcher("/meals.jsp").forward(request, response);
+        }
+
+        return "meals";
     }
 
     private int getId(HttpServletRequest request) {
