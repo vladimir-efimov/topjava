@@ -26,61 +26,77 @@ public class MealController extends MealRestController{
     }
 
     @RequestMapping(value = "/meals", method = RequestMethod.GET)
-    public String meals(Model model, HttpServletRequest request) {
+    public String doGet(Model model, HttpServletRequest request) {
         String action = request.getParameter("action");
 
         switch (action == null ? "all" : action) {
             case "delete":
-                int id = getId(request);
-                delete(id);
-                //todo: double check if this way of updating of table with meals is OK
-                model.addAttribute("meals", getAll());
-                break;
+                return deleteMeal(model, request);
             case "create":
             case "update":
-                final Meal meal = "create".equals(action) ?
-                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        get(getId(request));
-                model.addAttribute("meal", meal);
-                return "meal";
+                return editMeal(model, request);
             case "all":
             default:
-                model.addAttribute("meals", getAll());
-                break;
+                return getMeals(model);
+        }
+    }
+
+    @RequestMapping(value = "/meals", method = RequestMethod.POST)
+    public String doPost(Model model, HttpServletRequest request) {
+        try {
+            request.setCharacterEncoding("UTF-8");
+        }catch(Exception ex) {}
+        String action = request.getParameter("action");
+        if (action == null) {
+            return updateMeal(model, request);
+        } else if ("filter".equals(action)) {
+            return filterMeals(model, request);
         }
         return "meals";
     }
 
-    @RequestMapping(value = "/meals", method = RequestMethod.POST)
-    public String updateMeals(Model model, HttpServletRequest request) {
-        try {
-            request.setCharacterEncoding("UTF-8");
-        }catch(Exception ex) {}
-
-        String action = request.getParameter("action");
-        if (action == null) {
-            final Meal meal = new Meal(
-                    LocalDateTime.parse(request.getParameter("dateTime")),
-                    request.getParameter("description"),
-                    Integer.valueOf(request.getParameter("calories")));
-            if (request.getParameter("id").isEmpty()) {
-                create(meal);
-            } else {
-                update(meal, getId(request));
-            }
-            //response.sendRedirect("meals");
-            model.addAttribute("meals", getAll());
-        } else if ("filter".equals(action)) {
-            LocalDate startDate = DateTimeUtil.parseLocalDate(request.getParameter("startDate"));
-            LocalDate endDate = DateTimeUtil.parseLocalDate(request.getParameter("endDate"));
-            LocalTime startTime = DateTimeUtil.parseLocalTime(request.getParameter("startTime"));
-            LocalTime endTime = DateTimeUtil.parseLocalTime(request.getParameter("endTime"));
-            model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
-            //request.setAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
-            //request.getRequestDispatcher("/meals.jsp").forward(request, response);
-        }
-
+    private String getMeals(Model model)
+    {
+        model.addAttribute("meals", getAll());
         return "meals";
+    }
+
+    private String deleteMeal(Model model, HttpServletRequest request) {
+        int id = getId(request);
+        delete(id);
+        model.addAttribute("meals", getAll());
+        return "meals";
+    }
+
+    private String editMeal(Model model, HttpServletRequest request) {
+        String action = request.getParameter("action");
+        final Meal meal = "create".equals(action) ?
+                new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
+                get(getId(request));
+        model.addAttribute("meal", meal);
+        return "meal";
+    }
+
+    private String filterMeals(Model model, HttpServletRequest request) {
+        LocalDate startDate = DateTimeUtil.parseLocalDate(request.getParameter("startDate"));
+        LocalDate endDate = DateTimeUtil.parseLocalDate(request.getParameter("endDate"));
+        LocalTime startTime = DateTimeUtil.parseLocalTime(request.getParameter("startTime"));
+        LocalTime endTime = DateTimeUtil.parseLocalTime(request.getParameter("endTime"));
+        model.addAttribute("meals", getBetween(startDate, startTime, endDate, endTime));
+        return "meals";
+    }
+
+    private String updateMeal(Model model, HttpServletRequest request) {
+        final Meal meal = new Meal(
+                LocalDateTime.parse(request.getParameter("dateTime")),
+                request.getParameter("description"),
+                Integer.valueOf(request.getParameter("calories")));
+        if (request.getParameter("id").isEmpty()) {
+            create(meal);
+        } else {
+            update(meal, getId(request));
+        }
+        return "redirect:meals";
     }
 
     private int getId(HttpServletRequest request) {
