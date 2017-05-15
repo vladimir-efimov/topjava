@@ -2,6 +2,8 @@ package ru.javawebinar.topjava.web;
 
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,6 +26,25 @@ public class RootControllerTest extends AbstractControllerTest {
                                 hasProperty("id", is(START_SEQ)),
                                 hasProperty("name", is(USER.getName()))
                         )
+                )));
+    }
+
+    @Test
+    public void testMeals() throws Exception {
+        mockMvc.perform(get("/meals"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("meals"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
+                .andExpect(model().attribute("meals", hasSize(6)))
+                .andExpect(model().attribute("meals", hasItem(
+                        allOf(
+                                hasProperty("id", is(100006)),
+                                hasProperty("dateTime", is(LocalDateTime.of(2015,05,31,13,0,0))),
+                                hasProperty("description", is("Обед")),
+                                hasProperty("calories", is(1000)),
+                                hasProperty("exceed", is(true))
+                                )
                 )));
     }
 }
