@@ -8,9 +8,17 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
 
 import java.net.URI;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
+//import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @RestController
 @RequestMapping(MealRestController.REST_URL)
@@ -52,9 +60,19 @@ public class MealRestController extends AbstractMealController {
         super.update(meal, id);
     }
 
-    @Override
     @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<MealWithExceed> getBetween(@PathVariable("startDate") LocalDate startDate, @PathVariable("startTime") LocalTime startTime, @PathVariable("endDate") LocalDate endDate, @PathVariable("endTime") LocalTime endTime) {
+//  public List<MealWithExceed> getBetween() {
+    public List<MealWithExceed> getBetween(
+            @PathVariable("startDate") String startDateStr,
+            @PathVariable("endDate") String endDateStr,
+            @PathVariable("startTime") String startTimeStr,
+            @PathVariable("endTime") String endTimeStr
+    ) {
+        LocalDate startDate = parseLocalDate(startDateStr);
+        LocalDate endDate = parseLocalDate(endDateStr);
+        LocalTime startTime = parseLocalTime(startTimeStr);
+        LocalTime endTime = parseLocalTime(endTimeStr);
+        //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         return super.getBetween(startDate, startTime, endDate, endTime);
     }
 
