@@ -7,8 +7,11 @@
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
-<section>
-    <h3><spring:message code="meals.title"/></h3>
+<div class="jumbotron">
+   <div class="container">
+       <div class="shadow">
+
+           <h3><spring:message code="meals.title"/></h3>
 
     <form method="post" action="meals/filter">
         <dl>
@@ -29,35 +32,48 @@
         </dl>
         <button type="submit"><spring:message code="meals.filter"/></button>
     </form>
-    <hr>
-    <a href="meals/create"><spring:message code="meals.add"/></a>
-    <hr>
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-        <tr>
-            <th><spring:message code="meals.dateTime"/></th>
-            <th><spring:message code="meals.description"/></th>
-            <th><spring:message code="meals.calories"/></th>
-            <th></th>
-            <th></th>
-        </tr>
-        </thead>
-        <c:forEach items="${meals}" var="meal">
-            <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.MealWithExceed"/>
-            <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
-                <td>
-                        <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
-                        <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
-                        ${fn:formatDateTime(meal.dateTime)}
-                </td>
-                <td>${meal.description}</td>
-                <td>${meal.calories}</td>
-                <td><a href="meals/update?id=${meal.id}"><spring:message code="common.update"/></a></td>
-                <td><a href="meals/delete?id=${meal.id}"><spring:message code="common.delete"/></a></td>
-            </tr>
-        </c:forEach>
-    </table>
-</section>
+
+            <div class="view-box">
+                <a class="btn btn-info">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                </a>
+
+                <table class="table table-striped display" id="mealtable">
+                    <thead>
+                    <tr>
+                        <th><spring:message code="meals.dateTime"/></th>
+                        <th><spring:message code="meals.description"/></th>
+                        <th><spring:message code="meals.calories"/></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <c:forEach items="${meals}" var="meal">
+                        <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.MealWithExceed"/>
+                        <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
+                            <td>
+                                <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
+                                <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
+                                ${fn:formatDateTime(meal.dateTime)}
+                            </td>
+                            <td>${meal.description}</td>
+                            <td>${meal.calories}</td>
+
+                            <td><a class="btn btn-xs btn-primary">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </a></td>
+                            <td><a class="btn btn-xs btn-danger delete" id="${user.id}">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </div>
+        </div>
+   </div>
+</div>
+
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
