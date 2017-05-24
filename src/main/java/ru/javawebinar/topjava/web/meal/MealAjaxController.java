@@ -1,10 +1,13 @@
 package ru.javawebinar.topjava.web.meal;
 
 import org.springframework.web.bind.annotation.*;
+
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDateTime;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,10 +34,12 @@ public class MealAjaxController extends AbstractMealController {
 
     @PostMapping
     public void createOrUpdate(@RequestParam("id") Integer id,
-                               @RequestParam("dateTime") LocalDateTime dateTime,
+                               @RequestParam("dateTime") String dateTimeString,
                                @RequestParam("description") String description,
                                @RequestParam("calories") Integer calories
                                ) {
+        LocalDateTime dateTime = parseLocalDateTime(dateTimeString);
+        if(dateTime == null) dateTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
         Meal meal = new Meal(id, dateTime, description, calories);
 
         if(meal.isNew())

@@ -31,4 +31,21 @@ public class DateTimeUtil {
     public static LocalTime parseLocalTime(String str) {
         return StringUtils.isEmpty(str) ? null : LocalTime.parse(str);
     }
+
+    public static LocalDateTime parseLocalDateTime(String str) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        if(StringUtils.isEmpty(str)) return null;
+
+        try {
+             formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+             return LocalDateTime.parse(str, formatter);
+        } catch (Exception ex) { }
+
+        try {
+            formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return LocalDateTime.parse(str, formatter);
+        } catch (Exception ex) { }
+
+        return null;
+    }
 }
