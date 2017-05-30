@@ -1,6 +1,6 @@
 package ru.javawebinar.topjava.to;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Created by Vova on 30.05.2017.
@@ -9,18 +9,20 @@ import java.time.LocalDateTime;
 
 public class MealTo {
 
-    private final Integer id;
+    private Integer id;
 
-    private final LocalDateTime dateTime;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime dateTime;
 
-    private final String description;
+    private String description;
 
-    private final int calories;
+    private int calories;
 
-    public MealTo( @JsonProperty("id") Integer id,
-                   @JsonProperty("dateTime") LocalDateTime dateTime,
-                   @JsonProperty("description") String description,
-                   @JsonProperty("calories") int calories
+    public MealTo() {
+    }
+
+    public MealTo( Integer id, LocalDateTime dateTime,
+                   String description, int calories
                    ) {
         this.id = id;
         this.dateTime = dateTime;
@@ -31,22 +33,27 @@ public class MealTo {
     public Integer getId() {
         return id;
     }
+    public void setId(Integer id) { this.id = id;}
+
 
     public LocalDateTime getDateTime() {
         return dateTime;
     }
+    public void setDateTime(LocalDateTime dateTime) {this.dateTime = dateTime;}
 
     public String getDescription() {
         return description;
     }
+    public void setDescription(String description) {this.description = description;}
 
     public int getCalories() {
         return calories;
     }
+    public void setCalories(Integer calories) {this.calories = calories;}
 
     @Override
     public String toString() {
-        return "MealWithExceed{" +
+        return "MealTo{" +
                 "id=" + id +
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
