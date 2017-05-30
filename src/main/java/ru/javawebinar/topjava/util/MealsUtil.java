@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 public class MealsUtil {
 
+    public static final int DEFAULT_CALORIES = 1000;
+
     public static List<MealWithExceed> getWithExceeded(Collection<Meal> meals, int caloriesPerDay) {
         return getFilteredWithExceeded(meals, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
     }
@@ -46,13 +48,10 @@ public class MealsUtil {
         return new MealWithExceed(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
     }
 
-    public static Meal createNewFromTo(MealWithExceed newMeal) {
-        return new Meal(newMeal.getId(), newMeal.getDateTime(),
-                        newMeal.getDescription(), newMeal.getCalories());
-    }
 
     public static Meal createNewFromTo(MealTo newMeal) {
+        int calories = newMeal.getCalories() == null ? DEFAULT_CALORIES : newMeal.getCalories();
         return new Meal(newMeal.getId(), newMeal.getDateTime(),
-                newMeal.getDescription(), newMeal.getCalories());
+                newMeal.getDescription(), calories);
     }
 }

@@ -16,7 +16,7 @@ public class MealTo {
 
     private String description;
 
-    private int calories;
+    private Integer calories;
 
     public MealTo() {
     }
@@ -35,7 +35,6 @@ public class MealTo {
     }
     public void setId(Integer id) { this.id = id;}
 
-
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -46,7 +45,7 @@ public class MealTo {
     }
     public void setDescription(String description) {this.description = description;}
 
-    public int getCalories() {
+    public Integer getCalories() {
         return calories;
     }
     public void setCalories(Integer calories) {this.calories = calories;}
