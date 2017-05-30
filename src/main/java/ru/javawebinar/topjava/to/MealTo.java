@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.to;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.Range;
 
 /**
  * Created by Vova on 30.05.2017.
@@ -14,8 +16,10 @@ public class MealTo {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime dateTime;
 
+    @NotBlank(message = "Описание не может быть пусто")
     private String description;
 
+    @Range(min = 1, max = 3000, message = "Указано неверное число калорий (должно быть от 1 до 3000)")
     private Integer calories;
 
     public MealTo() {
