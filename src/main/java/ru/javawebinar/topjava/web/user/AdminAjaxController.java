@@ -13,6 +13,7 @@ import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.ValidationUtil;
+import ru.javawebinar.topjava.util.exception.PropertyNotValidException;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -47,9 +48,22 @@ public class AdminAjaxController extends AbstractUserController {
     }
 
     @PostMapping
+    public void createOrUpdate(@Valid UserTo userTo, BindingResult result) {
+        if (result.hasErrors()) {
+            String errorMessage = ValidationUtil.getErrorMessage(result);
+            throw new PropertyNotValidException(errorMessage);
+        }
+        if (userTo.isNew()) {
+            super.create(UserUtil.createNewFromTo(userTo));
+        } else {
+            super.update(userTo, userTo.getId());
+        }
+    }
+
+    /*
+        @PostMapping
     public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result) {
         if (result.hasErrors()) {
-            // TODO change to exception handler
             return ValidationUtil.getErrorResponse(result);
         }
         if (userTo.isNew()) {
@@ -59,6 +73,9 @@ public class AdminAjaxController extends AbstractUserController {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+     */
+
 
     @Override
     @PostMapping(value = "/{id}")

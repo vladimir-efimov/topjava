@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.util.exception.PropertyNotValidException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,6 +26,14 @@ public class ExceptionInfoHandler {
     public ErrorInfo handleError(HttpServletRequest req, NotFoundException e) {
         return logAndGetErrorInfo(req, e, false);
     }
+
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    @ExceptionHandler(PropertyNotValidException.class)
+    @ResponseBody
+    public ErrorInfo handleError(HttpServletRequest req,PropertyNotValidException e) {
+        return logAndGetErrorInfo(req, e, false);
+    }
+
 
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
