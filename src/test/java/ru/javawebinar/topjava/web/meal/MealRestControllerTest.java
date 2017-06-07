@@ -111,6 +111,18 @@ public class MealRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testCreateDuplicate() throws Exception {
+        Meal created = getCreated();
+        created.setDateTime(ADMIN_MEAL1.getDateTime());
+        ResultActions action = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(created))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     public void testGetAll() throws Exception {
         mockMvc.perform(get(REST_URL)
                 .with(userHttpBasic(USER)))

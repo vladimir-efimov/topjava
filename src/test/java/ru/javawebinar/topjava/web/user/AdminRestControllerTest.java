@@ -121,6 +121,19 @@ public class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isUnprocessableEntity());
     }
 
+    @Test
+    public void testCreateDuplicate() throws Exception {
+        User newUser = new User(null, "user3", "", "new", 2300, Role.ROLE_USER);
+        newUser.setEmail(USER.getEmail());
+        ResultActions action = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(JsonUtil.writeValue(newUser)))
+                .andDo(print())
+                .andExpect(status().isConflict());
+//                .andExpect(status().isCreated());
+    }
+
 
     @Test
     public void testGetAll() throws Exception {
