@@ -53,19 +53,11 @@ public class AdminAjaxController extends AbstractUserController {
             throw new PropertyNotValidException(errorMessage);
         }
 
-        try {
             if (userTo.isNew()) {
                 super.create(UserUtil.createNewFromTo(userTo));
             } else {
                 super.update(userTo, userTo.getId());
             }
-        }
-        catch (DataIntegrityViolationException ex) {
-            throw new DataIntegrityViolationException("User with this email already present in application");
-        }
-        catch (Exception ex) {
-            throw ex;
-        }
     }
 
     @Override

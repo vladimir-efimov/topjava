@@ -49,18 +49,10 @@ public class MealAjaxController extends AbstractMealController {
             String errorMessage = ValidationUtil.getErrorMessage(result);
             throw new PropertyNotValidException(errorMessage);
         }
-        try {
-            if (meal.isNew()) {
-                super.create(meal);
-            } else {
-                super.update(meal, meal.getId());
-            }
-        }
-        catch (DataIntegrityViolationException ex) {
-            throw new DataIntegrityViolationException("You have already meal with this date and time");
-        }
-        catch (Exception ex) {
-                throw ex;
+        if (meal.isNew()) {
+            super.create(meal);
+        } else {
+           super.update(meal, meal.getId());
         }
     }
 

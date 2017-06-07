@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.web.meal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -45,14 +46,30 @@ public abstract class AbstractMealController {
         int userId = AuthorizedUser.id();
         LOG.info("create {} for User {}", meal, userId);
         checkNew(meal);
-        return service.save(meal, userId);
+        try {
+            return service.save(meal, userId);
+        }
+        catch (DataIntegrityViolationException ex) {
+            throw new DataIntegrityViolationException("You have already meal with this date and time");
+        }
+        catch (Exception ex) {
+            throw ex;
+        }
     }
 
     public void update(Meal meal, int id) {
         int userId = AuthorizedUser.id();
         LOG.info("update {} with id={} for User {}", meal, id, userId);
         checkIdConsistent(meal, id);
-        service.update(meal, userId);
+        try {
+            service.update(meal, userId);
+        }
+        catch (DataIntegrityViolationException ex) {
+            throw new DataIntegrityViolationException("You have already meal with this date and time");
+        }
+        catch (Exception ex) {
+            throw ex;
+        }
     }
 
     /**

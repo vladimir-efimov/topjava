@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserTo;
@@ -33,7 +34,15 @@ public abstract class AbstractUserController {
     public User create(User user) {
         log.info("create {}", user);
         checkNew(user);
-        return service.save(user);
+        try {
+            return service.save(user);
+        }
+        catch (DataIntegrityViolationException ex) {
+            throw new DataIntegrityViolationException("User with this email already present in application");
+        }
+        catch (Exception ex) {
+            throw ex;
+        }
     }
 
     public void delete(int id) {
@@ -50,7 +59,15 @@ public abstract class AbstractUserController {
     public void update(UserTo userTo, int id) {
         log.info("update {} with id={}", userTo, id);
         checkIdConsistent(userTo, id);
-        service.update(userTo);
+        try {
+            service.update(userTo);
+        }
+        catch (DataIntegrityViolationException ex) {
+            throw new DataIntegrityViolationException("User with this email already present in application");
+        }
+        catch (Exception ex) {
+            throw ex;
+        }
     }
 
     public User getByMail(String email) {
