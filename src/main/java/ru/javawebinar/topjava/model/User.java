@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.View;
 
 import javax.persistence.*;
+import javax.validation.groups.Default;
 import java.util.*;
 
 import static ru.javawebinar.topjava.util.UserUtil.DEFAULT_CALORIES_PER_DAY;
@@ -35,11 +36,11 @@ public class User extends NamedEntity {
 
     @Column(name = "email", nullable = false, unique = true)
     @Email
-    @NotBlank
+    @NotBlank(groups = {View.ValidatedUI.class, Default.class})
     private String email;
 
     @Column(name = "password", nullable = false)
-    @NotBlank
+    @NotBlank(groups = {View.ValidatedUI.class, Default.class})
     @Length(min = 5)
     @JsonView(View.JsonREST.class)
     private String password;
