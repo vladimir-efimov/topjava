@@ -2,9 +2,8 @@ package ru.javawebinar.topjava.web.user;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.View;
@@ -53,29 +52,21 @@ public class AdminAjaxController extends AbstractUserController {
             String errorMessage = ValidationUtil.getErrorMessage(result);
             throw new PropertyNotValidException(errorMessage);
         }
-        if (userTo.isNew()) {
-            super.create(UserUtil.createNewFromTo(userTo));
-        } else {
-            super.update(userTo, userTo.getId());
+
+        try {
+            if (userTo.isNew()) {
+                super.create(UserUtil.createNewFromTo(userTo));
+            } else {
+                super.update(userTo, userTo.getId());
+            }
+        }
+        catch (DataIntegrityViolationException ex) {
+            throw new DataIntegrityViolationException("User with this email already present in application");
+        }
+        catch (Exception ex) {
+            throw ex;
         }
     }
-
-    /*
-        @PostMapping
-    public ResponseEntity<String> createOrUpdate(@Valid UserTo userTo, BindingResult result) {
-        if (result.hasErrors()) {
-            return ValidationUtil.getErrorResponse(result);
-        }
-        if (userTo.isNew()) {
-            super.create(UserUtil.createNewFromTo(userTo));
-        } else {
-            super.update(userTo, userTo.getId());
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-     */
-
 
     @Override
     @PostMapping(value = "/{id}")
