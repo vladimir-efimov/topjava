@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.web.user;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -122,6 +124,7 @@ public class AdminRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
     public void testCreateDuplicate() throws Exception {
         User newUser = new User(null, "user3", "", "new", 2300, Role.ROLE_USER);
         newUser.setEmail(USER.getEmail());
