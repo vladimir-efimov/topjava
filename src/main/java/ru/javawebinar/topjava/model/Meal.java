@@ -4,12 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Meal {
-    private Integer id;
-
+public class Meal extends AbstractNamedEntity {
     private final LocalDateTime dateTime;
-
-    private final String description;
 
     private final int calories;
 
@@ -18,18 +14,9 @@ public class Meal {
     }
 
     public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
-        this.id = id;
+        super(id, description);
         this.dateTime = dateTime;
-        this.description = description;
         this.calories = calories;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public LocalDateTime getDateTime() {
@@ -37,7 +24,7 @@ public class Meal {
     }
 
     public String getDescription() {
-        return description;
+        return name;
     }
 
     public int getCalories() {
@@ -52,16 +39,12 @@ public class Meal {
         return dateTime.toLocalTime();
     }
 
-    public boolean isNew() {
-        return id == null;
-    }
-
     @Override
     public String toString() {
         return "Meal{" +
                 "id=" + id +
                 ", dateTime=" + dateTime +
-                ", description='" + description + '\'' +
+                ", description='" + name + '\'' +
                 ", calories=" + calories +
                 '}';
     }
