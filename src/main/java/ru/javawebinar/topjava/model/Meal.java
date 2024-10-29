@@ -20,7 +20,7 @@ import java.time.LocalTime;
                 "UPDATE Meal m SET m.description=:description, m.calories=:calories, m.dateTime=:date_time WHERE m.id=:id and m.user.id=:userId"),
 })
 @Entity
-@Table(name = "meal")
+@Table(name = "meal", uniqueConstraints = {@UniqueConstraint(columnNames = {"id", "date_time"}, name = "id_date_time")})
 public class Meal extends AbstractBaseEntity {
 
     public static final String ALL_SORTED = "Meal.getAllSorted";
