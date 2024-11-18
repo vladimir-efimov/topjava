@@ -9,13 +9,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
+import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 
 @Controller
@@ -27,8 +33,20 @@ public class JspMealController extends AbstractMealController {
     }
 
     @GetMapping("")
-    public String getMeals(Model model) {
-        model.addAttribute("meals", super.getAll());
+    public String getMeals(Model model, HttpServletRequest request) {
+
+        LocalDate startDate = parseLocalDate(request.getParameter("startDate"));
+        LocalDate endDate = parseLocalDate(request.getParameter("endDate"));
+        LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
+        LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
+
+        List<MealTo> meals;
+        if (startDate != null || startTime != null || endDate != null || endTime != null) {
+            meals = getBetween(startDate, startTime, endDate, endTime);
+        } else {
+            meals = getAll();
+        }
+        model.addAttribute("meals", meals);
         return "meals";
     }
 
@@ -74,7 +92,7 @@ public class JspMealController extends AbstractMealController {
         if (StringUtils.hasLength(request.getParameter("id"))) {
             int id = Integer.parseInt(request.getParameter("id"));
             meal.setId(id);
-            this.update(meal,id);
+            this.update(meal, id);
         } else {
             this.create(meal);
         }
