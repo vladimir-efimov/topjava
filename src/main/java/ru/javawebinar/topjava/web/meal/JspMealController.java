@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -25,6 +26,7 @@ import java.util.List;
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 
 @Controller
+@RequestMapping(value = "/meals")
 public class JspMealController {
 
     private static final Logger log = LoggerFactory.getLogger(JspMealController.class);
@@ -35,7 +37,7 @@ public class JspMealController {
         this.service = service;
     }
 
-    @GetMapping("/meals")
+    @GetMapping("")
     public String getMeals(Model model) {
         int userId = SecurityUtil.authUserId();
         log.info("getMeals for user {}", userId);
@@ -44,7 +46,7 @@ public class JspMealController {
         return "meals";
     }
 
-    @GetMapping("/meals/delete")
+    @GetMapping("/delete")
     public String delete(@RequestParam int id) {
         int userId = SecurityUtil.authUserId();
         log.info("delete meal {} for user {}", id, userId);
@@ -52,7 +54,7 @@ public class JspMealController {
         return "redirect:/meals";
     }
 
-    @GetMapping("/meals/create")
+    @GetMapping("/create")
     public String create(Model model) {
         int userId = SecurityUtil.authUserId();
         final Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
@@ -61,7 +63,7 @@ public class JspMealController {
         return "mealForm.jsp?action=create";
     }
 
-    @GetMapping("/meals/update")
+    @GetMapping("/update")
     public String update(Model model, @RequestParam int id) {
         int userId = SecurityUtil.authUserId();
         Meal meal = service.get(id, userId);
@@ -71,7 +73,7 @@ public class JspMealController {
         return "mealForm.jsp?action=update";
     }
 
-    @PostMapping("/meals/add")
+    @PostMapping("/add")
     public String addMeal(HttpServletRequest request) {
         int userId = SecurityUtil.authUserId();
         log.info("addMeal for user {}", userId);
@@ -103,7 +105,7 @@ public class JspMealController {
      * <li>by time for every date</li>
      * </ol>
      */
-    @GetMapping("/meals/filter")
+    @GetMapping("/filter")
     public String getBetween(@Nullable LocalDate startDate, @Nullable LocalTime startTime,
                                    @Nullable LocalDate endDate, @Nullable LocalTime endTime) {
         int userId = SecurityUtil.authUserId();
