@@ -59,8 +59,9 @@ public class JspMealController {
         int userId = SecurityUtil.authUserId();
         final Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         model.addAttribute("meal", meal);
+        model.addAttribute("action", "create");
         log.info("create {} for user {}", meal, userId);
-        return "mealForm.jsp?action=create";
+        return "mealForm";
     }
 
     @GetMapping("/update")
@@ -70,7 +71,8 @@ public class JspMealController {
         assureIdConsistent(meal, id);
         log.info("update {} for user {}", meal, userId);
         model.addAttribute("meal", meal);
-        return "mealForm.jsp?action=update";
+        model.addAttribute("action", "edit");
+        return "mealForm";
     }
 
     @PostMapping("/add")
