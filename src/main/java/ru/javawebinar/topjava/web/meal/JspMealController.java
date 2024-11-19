@@ -61,7 +61,6 @@ public class JspMealController extends AbstractMealController {
         int userId = SecurityUtil.authUserId();
         final Meal meal = new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
         model.addAttribute("meal", meal);
-        model.addAttribute("action", "create");
         log.info("create {} for user {}", meal, userId);
         return "mealForm";
     }
@@ -73,7 +72,6 @@ public class JspMealController extends AbstractMealController {
         assureIdConsistent(meal, id);
         log.info("update {} for user {}", meal, userId);
         model.addAttribute("meal", meal);
-        model.addAttribute("action", "edit");
         return "mealForm";
     }
 

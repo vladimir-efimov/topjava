@@ -3,13 +3,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
-<head>
-    <title>Meal</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <h2> <spring:message code="${action == 'create' ? 'meal.add' : 'meal.edit'}"/> </h2>
+    <h2> <spring:message code="${empty meal.id ? 'meal.add' : 'meal.edit'}"/> </h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="add">
         <input type="hidden" name="id" value="${meal.id}">
@@ -29,5 +27,6 @@
         <button onclick="window.history.back()" type="button"><spring:message code="common.cancel"/></button>
     </form>
 </section>
+<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
