@@ -66,6 +66,10 @@
         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
+
+        <bean class="ru.javawebinar.topjava.repository.cache.SpringCacheCleaner">
+            <constructor-arg value="users"/>
+        </bean>
     </beans>
 
     <beans profile="jpa,datajpa">
@@ -107,7 +111,16 @@
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
 
-        <bean class="ru.javawebinar.topjava.repository.JpaUtil"/>
+        <bean name="cacheCleaner" class="ru.javawebinar.topjava.repository.cache.MultiCacheCleaner">
+            <constructor-arg>
+                    <list>
+                        <bean class="ru.javawebinar.topjava.repository.cache.SpringCacheCleaner">
+                            <constructor-arg value="users"/>
+                        </bean>
+                        <bean class="ru.javawebinar.topjava.repository.cache.HibernateCacheCleaner"/>
+                    </list>
+            </constructor-arg>
+        </bean>
     </beans>
 
     <beans profile="jpa">
