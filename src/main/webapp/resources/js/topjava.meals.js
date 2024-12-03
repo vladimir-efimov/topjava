@@ -39,3 +39,9 @@ $(function () {
         })
     );
 });
+
+function filter() {
+    $.get(ctx.ajaxUrl + "filter/", $('#filterForm').serialize(), function (data) {
+        ctx.datatableApi.clear().rows.add(data).draw();
+    });
+}
