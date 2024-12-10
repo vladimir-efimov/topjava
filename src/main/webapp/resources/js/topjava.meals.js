@@ -20,6 +20,10 @@ function clearFilter() {
 $(function () {
     makeEditable(
         $("#datatable").DataTable({
+            "ajax": {
+                "url": mealAjaxUrl,
+                "dataSrc": ""
+            },
             "paging": false,
             "info": true,
             "columns": [
@@ -33,12 +37,14 @@ $(function () {
                     "data": "calories"
                 },
                 {
-                    "defaultContent": "Edit",
-                    "orderable": false
+                    "defaultContent": "",
+                    "orderable": false,
+                    "render": renderEditBtn
                 },
                 {
-                    "defaultContent": "Delete",
-                    "orderable": false
+                    "defaultContent": "",
+                    "orderable": false,
+                    "render": renderDeleteBtn
                 }
             ],
             "order": [

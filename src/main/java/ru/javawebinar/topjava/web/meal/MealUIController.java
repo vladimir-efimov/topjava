@@ -7,6 +7,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +25,12 @@ public class MealUIController extends AbstractMealController {
     }
 
     @Override
+    @GetMapping("/{id}")
+    public Meal get(@PathVariable int id) {
+        return super.get(id);
+    }
+
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
@@ -32,10 +39,12 @@ public class MealUIController extends AbstractMealController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void create(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
-                       @RequestParam String description,
-                       @RequestParam int calories) {
-        super.create(new Meal(null, dateTime, description, calories));
+    public void createOrUpdate(Meal meal) {
+        if (meal.isNew()) {
+            super.create(meal);
+        } else {
+            super.update(meal, meal.getId());
+        }
     }
 
     @Override
