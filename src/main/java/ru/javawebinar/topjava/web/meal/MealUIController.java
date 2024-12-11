@@ -5,21 +5,32 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.web.converter.DateTimeFormatters;
+import ru.javawebinar.topjava.web.converter.IntegerFormatter;
 
 import javax.validation.Valid;
 
 import static ru.javawebinar.topjava.web.UIUtil.bindingErrorsAsResponseEntity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/profile/meals", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = MealUIController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealUIController extends AbstractMealController {
+
+    static final String URL = "/profile/meals";
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+         binder.addCustomFormatter(new DateTimeFormatters.LocalDateTimeFormatter(), LocalDateTime.class);
+    }
 
     @Override
     @GetMapping
