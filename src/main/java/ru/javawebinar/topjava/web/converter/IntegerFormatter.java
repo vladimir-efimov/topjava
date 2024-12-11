@@ -12,7 +12,7 @@ public class IntegerFormatter implements Formatter<Integer> {
 
     @Override
     public Integer parse(String text, Locale locale) {
-        return text == "" ? null : Integer.getInteger(text);
+        return text == "" ? null : Integer.parseInt(text);
     }
 
     @Override
