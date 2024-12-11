@@ -30,6 +30,7 @@ public class MealUIController extends AbstractMealController {
     @InitBinder
     public void initBinder(WebDataBinder binder) {
          binder.addCustomFormatter(new DateTimeFormatters.LocalDateTimeFormatter(), LocalDateTime.class);
+         binder.addCustomFormatter(new IntegerFormatter(), Integer.class);
     }
 
     @Override
