@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -124,4 +126,31 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(TO_MATCHER.contentJson(getTos(meals, user.getCaloriesPerDay())));
     }
+
+    @Test
+    void incorrectCreate() throws Exception {
+        String contentStr = "{\"description\":\"_\"}";
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(contentStr))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+
+        assertEquals(MethodArgumentNotValidException.class, action.andReturn().getResolvedException().getClass());
+    }
+
+    @Test
+    void incorrectUpdate() throws Exception {
+        String contentStr = "{\"id\":" + MEAL1_ID +",\"description\":\"_\"}";
+        ResultActions action = perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(user))
+                .content(contentStr))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+
+        assertEquals(MethodArgumentNotValidException.class, action.andReturn().getResolvedException().getClass());
+    }
+
 }
