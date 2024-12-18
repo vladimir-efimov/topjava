@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 import org.springframework.core.NestedExceptionUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
 
@@ -84,5 +85,13 @@ public class ValidationUtil {
 
     public static String[] getDefaultErrorMessage(Exception e) {
         return new String[] {getRootCause(e).getMessage()};
+    }
+
+    public static String[] getConstraintViolationErrorMessage(DataIntegrityViolationException e) {
+        String message = getRootCause(e).getMessage();
+        if (message.contains("users_unique_email_idx")) {
+            return new String[] {"User with this email already exists"};
+        }
+        return new String[] {message};
     }
 }
