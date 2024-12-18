@@ -20,7 +20,6 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolationException;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.*;
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
