@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javawebinar.topjava.Profiles.VDS;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.util.UsersUtil.asTo;
 import static ru.javawebinar.topjava.util.exception.UpdateRestrictionException.EXCEPTION_UPDATE_RESTRICTION;
 
 @ActiveProfiles(VDS)
@@ -35,7 +36,7 @@ class VdsRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(admin))
-                .content(UserTestData.jsonWithPassword(user, "password")))
+                .content(UserTestData.jsonWithPassword(asTo(user), "password")))
                 .andExpect(errorType(ErrorType.VALIDATION_ERROR))
                 .andExpect(detailMessage(EXCEPTION_UPDATE_RESTRICTION))
                 .andExpect(status().isUnprocessableEntity());
